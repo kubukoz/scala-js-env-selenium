@@ -5,9 +5,10 @@ import org.scalajs.sbtplugin.ScalaJSCrossVersion
 import org.openqa.selenium.Capabilities
 
 import org.scalajs.jsenv.selenium.SeleniumJSEnv
-import org.scalajs.jsenv.selenium.TestCapabilities
+import org.scalajs.jsenv.selenium.TestDrivers
 
-val previousVersion: Option[String] = Some("1.1.1")
+// we're breaking bincompat with the bump to selenium 4
+val previousVersion: Option[String] = None
 
 val newScalaBinaryVersionsInThisRelease: Set[String] =
   Set()
@@ -55,12 +56,8 @@ val previousArtifactSetting = Def.settings(
   }
 )
 
-val jsEnvCapabilities = settingKey[org.openqa.selenium.Capabilities](
-    "Capabilities of the SeleniumJSEnv")
-
 val testSettings: Seq[Setting[_]] = commonSettings ++ Seq(
-  jsEnvCapabilities := TestCapabilities.fromEnv,
-  jsEnv := new SeleniumJSEnv(jsEnvCapabilities.value),
+  jsEnv := new SeleniumJSEnv(TestDrivers.fromEnv),
   scalaJSUseMainModuleInitializer := true
 )
 
@@ -77,7 +74,7 @@ lazy val seleniumJSEnv: Project = project.
          * It pulls in "closure-compiler-java-6" which in turn bundles some old
          * guava stuff which in turn makes selenium fail.
          */
-        "org.seleniumhq.selenium" % "selenium-server" % "3.141.59",
+        "org.seleniumhq.selenium" % "selenium-java" % "4.25.0",
         "org.scala-js" %% "scalajs-js-envs" % "1.1.1",
         "com.google.jimfs" % "jimfs" % "1.1",
         "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.1.1" % "test",
@@ -132,7 +129,7 @@ lazy val seleniumJSHttpEnvTest: Project = project.
   settings(
     jsEnv := {
       new SeleniumJSEnv(
-          jsEnvCapabilities.value,
+          TestDrivers.fromEnv,
           SeleniumJSEnv.Config()
             .withMaterializeInServer("tmp", "http://localhost:8080/tmp/")
       )

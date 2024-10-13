@@ -7,12 +7,12 @@ import java.net.URL
 
 import org.openqa.selenium._
 import org.openqa.selenium.remote.DesiredCapabilities
-import org.openqa.selenium.remote.server._
 
 import org.junit._
 import org.junit.Assert._
 
 import org.scalajs.jsenv._
+import org.scalajs.jsenv.selenium.SeleniumJSEnv.DriverFactory
 
 class KeepAliveTest {
   private final class MockWebDriver extends WebDriver with JavascriptExecutor {
@@ -56,23 +56,19 @@ class KeepAliveTest {
   private final class MockInjector(driver: WebDriver) extends DriverFactory {
     var used = false
 
-    def newInstance(caps: Capabilities): WebDriver = {
+    def apply(): WebDriver = {
       require(!used)
       used = true
       driver
     }
-
-    def hasMappingFor(caps: Capabilities): Boolean = true
-    def registerDriverProvider(p: DriverProvider): Unit = ???
   }
 
   private def setup(keepAlive: Boolean) = {
     val driver = new MockWebDriver
     val factory = new MockInjector(driver)
     val config = SeleniumJSEnv.Config()
-      .withDriverFactory(factory)
       .withKeepAlive(keepAlive)
-    val env = new SeleniumJSEnv(new DesiredCapabilities, config)
+    val env = new SeleniumJSEnv(factory, config)
 
     (driver, factory, env)
   }

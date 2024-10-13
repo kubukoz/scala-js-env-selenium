@@ -9,7 +9,7 @@ addSbtPlugin("org.scalastyle" % "scalastyle-sbt-plugin" % "1.0.0")
  * guava stuff which in turn makes selenium fail.
  */
 libraryDependencies ~=
-  ("org.seleniumhq.selenium" % "selenium-server" % "3.141.59" +: _)
+  ("org.seleniumhq.selenium" % "selenium-java" % "4.25.0" +: _)
 
 Compile / unmanagedSourceDirectories ++= {
   val root = baseDirectory.value.getParentFile
@@ -18,5 +18,5 @@ Compile / unmanagedSourceDirectories ++= {
 
 Compile / sources += {
   val root = baseDirectory.value.getParentFile
-  root / "seleniumJSEnv/src/test/scala/org/scalajs/jsenv/selenium/TestCapabilities.scala"
+  root / "seleniumJSEnv/src/test/scala/org/scalajs/jsenv/selenium/TestDrivers.scala"
 }

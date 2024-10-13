@@ -1,25 +1,20 @@
 package org.scalajs.jsenv.selenium
 
-import org.openqa.selenium._
-import org.openqa.selenium.remote.DesiredCapabilities
-import org.openqa.selenium.remote.server._
 
 import org.scalajs.jsenv._
 
 import java.net.URL
 import java.nio.file.{Path, Paths}
+import org.openqa.selenium.Capabilities
+import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.Platform
+import SeleniumJSEnv.DriverFactory
 
-final class SeleniumJSEnv(capabilities: Capabilities, config: SeleniumJSEnv.Config) extends JSEnv {
-  def this(capabilities: Capabilities) =
-    this(capabilities, SeleniumJSEnv.Config())
+final class SeleniumJSEnv(driverFactory: DriverFactory, config: SeleniumJSEnv.Config) extends JSEnv {
 
-  private val augmentedCapabilities = {
-    val x = new DesiredCapabilities(capabilities)
-    x.setJavascriptEnabled(true)
-    x
-  }
-
-  val name: String = s"SeleniumJSEnv ($capabilities)"
+  val name: String = s"SeleniumJSEnv ($config)"
 
   def start(input: Seq[Input], runConfig: RunConfig): JSRun =
     SeleniumRun.start(newDriver _, input, config, runConfig)
@@ -29,7 +24,7 @@ final class SeleniumJSEnv(capabilities: Capabilities, config: SeleniumJSEnv.Conf
 
   private def newDriver() = {
     val driver: WebDriver =
-      config.driverFactory.newInstance(augmentedCapabilities)
+      driverFactory()
 
     /* The first `asInstanceOf`s are a fail-fast for the second one, which
      * scalac partially erases, so that we're sure right now that the last
@@ -43,11 +38,14 @@ final class SeleniumJSEnv(capabilities: Capabilities, config: SeleniumJSEnv.Conf
 
     driver.asInstanceOf[WebDriver with JavascriptExecutor]
   }
+
+  def this(driverFactory: DriverFactory) = this(driverFactory, SeleniumJSEnv.Config())
 }
 
 object SeleniumJSEnv {
+  type DriverFactory = () => WebDriver
+
   final class Config private (
-      val driverFactory: DriverFactory,
       val keepAlive: Boolean,
       val materialization: Config.Materialization
   ) {
@@ -55,8 +53,7 @@ object SeleniumJSEnv {
 
     private def this() = this(
         keepAlive = false,
-        materialization = Config.Materialization.Temp,
-        driverFactory = new DefaultDriverFactory(Platform.getCurrent()))
+        materialization = Config.Materialization.Temp)
 
     /** Materializes purely virtual files into a temp directory.
      *
@@ -113,13 +110,9 @@ object SeleniumJSEnv {
     def withKeepAlive(keepAlive: Boolean): Config =
       copy(keepAlive = keepAlive)
 
-    def withDriverFactory(driverFactory: DriverFactory): Config =
-      copy(driverFactory = driverFactory)
-
     private def copy(keepAlive: Boolean = keepAlive,
-        materialization: Config.Materialization = materialization,
-        driverFactory: DriverFactory = driverFactory) = {
-      new Config(driverFactory, keepAlive, materialization)
+        materialization: Config.Materialization = materialization) = {
+      new Config(keepAlive, materialization)
     }
   }
 
