@@ -14,7 +14,7 @@ val newScalaBinaryVersionsInThisRelease: Set[String] =
   Set()
 
 val commonSettings: Seq[Setting[_]] = Seq(
-  version := "1.1.2-SNAPSHOT",
+  version := "2.0.0-SNAPSHOT",
   organization := "org.scala-js",
   scalaVersion := "2.12.20",
   crossScalaVersions := Seq("2.12.20", "2.13.15"),
