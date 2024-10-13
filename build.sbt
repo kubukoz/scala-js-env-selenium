@@ -15,8 +15,8 @@ val newScalaBinaryVersionsInThisRelease: Set[String] =
 val commonSettings: Seq[Setting[_]] = Seq(
   version := "1.1.2-SNAPSHOT",
   organization := "org.scala-js",
-  scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1"),
+  scalaVersion := "2.12.20",
+  crossScalaVersions := Seq("2.12.20", "2.13.15"),
   scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings"),
 
   homepage := Some(url("http://scala-js.org/")),
@@ -117,7 +117,7 @@ lazy val seleniumJSEnv: Project = project.
     pomIncludeRepository := { _ => false },
 
     // The chrome driver seems to not deal with parallelism very well (#47).
-    parallelExecution in Test := false
+    (Test / parallelExecution) := false
   )
 
 lazy val seleniumJSEnvTest: Project = project.

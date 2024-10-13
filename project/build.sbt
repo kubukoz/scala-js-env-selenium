@@ -1,6 +1,6 @@
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.2.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.17.0")
 
-addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.1.18")
+addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.4")
 
 addSbtPlugin("org.scalastyle" % "scalastyle-sbt-plugin" % "1.0.0")
 
@@ -11,12 +11,12 @@ addSbtPlugin("org.scalastyle" % "scalastyle-sbt-plugin" % "1.0.0")
 libraryDependencies ~=
   ("org.seleniumhq.selenium" % "selenium-server" % "3.141.59" +: _)
 
-unmanagedSourceDirectories in Compile ++= {
+Compile / unmanagedSourceDirectories ++= {
   val root = baseDirectory.value.getParentFile
   Seq(root / "seleniumJSEnv/src/main/scala")
 }
 
-sources in Compile += {
+Compile / sources += {
   val root = baseDirectory.value.getParentFile
   root / "seleniumJSEnv/src/test/scala/org/scalajs/jsenv/selenium/TestCapabilities.scala"
 }
