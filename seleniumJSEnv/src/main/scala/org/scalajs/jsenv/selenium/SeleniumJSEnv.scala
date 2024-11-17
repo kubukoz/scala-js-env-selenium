@@ -14,6 +14,8 @@ import SeleniumJSEnv.DriverFactory
 
 final class SeleniumJSEnv(driverFactory: DriverFactory, config: SeleniumJSEnv.Config) extends JSEnv {
 
+  def this(driverFactory: DriverFactory) = this(driverFactory, SeleniumJSEnv.Config())
+
   val name: String = s"SeleniumJSEnv ($config)"
 
   def start(input: Seq[Input], runConfig: RunConfig): JSRun =
@@ -38,8 +40,6 @@ final class SeleniumJSEnv(driverFactory: DriverFactory, config: SeleniumJSEnv.Co
 
     driver.asInstanceOf[WebDriver with JavascriptExecutor]
   }
-
-  def this(driverFactory: DriverFactory) = this(driverFactory, SeleniumJSEnv.Config())
 }
 
 object SeleniumJSEnv {
