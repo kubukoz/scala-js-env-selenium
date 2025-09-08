@@ -10,8 +10,8 @@ import org.scalajs.jsenv.selenium.TestDrivers
 val commonSettings: Seq[Setting[_]] = Seq(
   version := "2.0.0-SNAPSHOT",
   organization := "org.scala-js",
-  scalaVersion := "2.12.20",
-  crossScalaVersions := Seq("2.12.20", "2.13.15"),
+  scalaVersion := crossScalaVersions.value.head,
+  crossScalaVersions := Seq("2.12.20", "2.13.16"),
   scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings"),
 
   homepage := Some(url("http://scala-js.org/")),

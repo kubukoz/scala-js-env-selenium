@@ -24,7 +24,7 @@ private sealed class SeleniumRun(
 
   protected val intf = "this.scalajsSeleniumInternalInterface"
 
-  private[this] implicit val ec =
+  private[this] implicit val ec: ExecutionContextExecutor =
     ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor())
 
   private val handler = Future {
