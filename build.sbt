@@ -7,12 +7,6 @@ import org.openqa.selenium.Capabilities
 import org.scalajs.jsenv.selenium.SeleniumJSEnv
 import org.scalajs.jsenv.selenium.TestDrivers
 
-// we're breaking bincompat with the bump to selenium 4
-val previousVersion: Option[String] = None
-
-val newScalaBinaryVersionsInThisRelease: Set[String] =
-  Set()
-
 val commonSettings: Seq[Setting[_]] = Seq(
   version := "2.0.0-SNAPSHOT",
   organization := "org.scala-js",
@@ -30,29 +24,20 @@ val commonSettings: Seq[Setting[_]] = Seq(
   testOptions += Tests.Argument(TestFramework("com.novocode.junit.JUnitFramework"), "-v", "-a")
 )
 
-val previousArtifactSetting = Def.settings(
-  mimaPreviousArtifacts ++= {
-    val scalaV = scalaVersion.value
-    val scalaBinaryV = scalaBinaryVersion.value
-    val thisProjectID = projectID.value
-    previousVersion match {
-      case None =>
-        Set.empty
-      case _ if newScalaBinaryVersionsInThisRelease.contains(scalaBinaryV) =>
-        // New in this release, no binary compatibility to comply to
-        Set.empty
-      case Some(prevVersion) =>
-        /* Filter out e:info.apiURL as it expects 0.6.7-SNAPSHOT, whereas the
-         * artifact we're looking for has 0.6.6 (for example).
-         */
-        val prevExtraAttributes =
-          thisProjectID.extraAttributes.filterKeys(_ != "e:info.apiURL")
-        val prevProjectID =
-          (thisProjectID.organization % thisProjectID.name % prevVersion)
-            .cross(thisProjectID.crossVersion)
-            .extra(prevExtraAttributes.toSeq: _*)
-        Set(prevProjectID)
-    }
+val mimaSettings = Seq(
+  mimaBinaryIssueFilters ++= BinaryIncompatibilities.SeleniumJSEnv,
+  mimaFailOnNoPrevious := false,
+  mimaPreviousArtifacts := {
+    // Released versions - will be Set("2.0.0", "2.0.1", etc.) after releases
+    val all: Set[String] = Set.empty
+
+    // Exclusion predicates per Scala binary version
+    // Example: Map("3" -> (_.startsWith("2.0."))) would exclude 2.0.x versions for Scala 3
+    val exclusions: Map[String, String => Boolean] = Map.empty
+
+    all
+      .filterNot(exclusions.getOrElse(scalaBinaryVersion.value, _ => false))
+      .map(v => organization.value %% name.value % v)
   }
 )
 
@@ -66,6 +51,7 @@ name := "root"
 
 lazy val seleniumJSEnv: Project = project.
   settings(commonSettings).
+  settings(mimaSettings).
   settings(
     name := "scalajs-env-selenium",
 
@@ -80,9 +66,6 @@ lazy val seleniumJSEnv: Project = project.
         "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.1.1" % "test",
         "com.novocode" % "junit-interface" % "0.11" % "test"
     ),
-
-    previousArtifactSetting,
-    mimaBinaryIssueFilters ++= BinaryIncompatibilities.SeleniumJSEnv,
 
     publishMavenStyle := true,
     publishTo := {
