@@ -62,7 +62,7 @@ lazy val seleniumJSEnv: Project = project.
          */
         "org.seleniumhq.selenium" % "selenium-java" % "4.35.0",
         "org.scala-js" %% "scalajs-js-envs" % "1.4.0",
-        "com.google.jimfs" % "jimfs" % "1.1",
+        "com.google.jimfs" % "jimfs" % "1.3.1",
         "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.4.0" % Test,
         "com.novocode" % "junit-interface" % "0.11" % Test
     ),
