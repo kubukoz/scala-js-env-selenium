@@ -166,9 +166,10 @@ private[selenium] object SeleniumRun {
 
   private def htmlPage(fullInput: Seq[Input], materializer: FileMaterializer): String = {
     val tags = fullInput.map {
-      case Input.Script(path)   => makeTag(path, "text/javascript", materializer)
-      case Input.ESModule(path) => makeTag(path, "module", materializer)
-      case _                    => throw new UnsupportedInputException(fullInput)
+      case Input.Script(path)         => makeTag(path, "text/javascript", materializer)
+      case Input.ESModule(path)       => makeTag(path, "module", materializer)
+      case Input.CommonJSModule(path) => makeTag(path, "text/javascript", materializer)
+      case _                          => throw new UnsupportedInputException(fullInput)
     }
 
     s"""<html>

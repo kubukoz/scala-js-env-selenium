@@ -61,10 +61,10 @@ lazy val seleniumJSEnv: Project = project.
          * guava stuff which in turn makes selenium fail.
          */
         "org.seleniumhq.selenium" % "selenium-java" % "4.35.0",
-        "org.scala-js" %% "scalajs-js-envs" % "1.1.1",
+        "org.scala-js" %% "scalajs-js-envs" % "1.4.0",
         "com.google.jimfs" % "jimfs" % "1.1",
-        "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.1.1" % "test",
-        "com.novocode" % "junit-interface" % "0.11" % "test"
+        "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.4.0" % Test,
+        "com.novocode" % "junit-interface" % "0.11" % Test
     ),
 
     publishMavenStyle := true,
