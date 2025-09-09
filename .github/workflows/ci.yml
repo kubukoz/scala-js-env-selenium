@@ -22,9 +22,10 @@ jobs:
       SJS_TEST_BROWSER: ${{ matrix.browser }}
     steps:
       - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v14
+      - uses: coursier/setup-action@v1
         with:
-          java-version: "adopt@1.11"
+          jvm: "temurin:11"
+          apps: sbt
       - uses: coursier/cache-action@v6
       - name: Scalastyle
         run: >
