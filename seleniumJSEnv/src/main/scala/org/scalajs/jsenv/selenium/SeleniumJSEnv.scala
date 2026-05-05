@@ -3,6 +3,7 @@ package org.scalajs.jsenv.selenium
 
 import org.scalajs.jsenv._
 
+import java.net.URI
 import java.net.URL
 import java.nio.file.{Path, Paths}
 import org.openqa.selenium.Capabilities
@@ -90,7 +91,7 @@ object SeleniumJSEnv {
      *  }}}
      */
     def withMaterializeInServer(contentDir: String, webRoot: String): Config =
-      withMaterializeInServer(Paths.get(contentDir), new URL(webRoot))
+      withMaterializeInServer(Paths.get(contentDir), URI.create(webRoot).toURL)
 
     /** Materializes files in a static directory of a user configured server.
      *

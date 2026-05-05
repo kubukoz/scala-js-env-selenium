@@ -6,14 +6,15 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        scalaversion: ["2.12.20", "2.13.15"]
-        browser: ["chrome"]
+        scalaversion: [ "2.12.20", "2.13.16" ]
+        browser: [ "chrome" ]
         include:
           - scalaversion: "2.12.20"
             browser: "firefox"
@@ -21,10 +22,11 @@ jobs:
       SJS_TEST_BROWSER: ${{ matrix.browser }}
     steps:
       - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v10
+      - uses: coursier/setup-action@v1
         with:
-          java-version: "adopt@1.11"
-      - uses: coursier/cache-action@v5
+          jvm: "temurin:11"
+          apps: sbt
+      - uses: coursier/cache-action@v6
       - name: Scalastyle
         run: >
           sbt "++${{ matrix.scalaversion }}"
