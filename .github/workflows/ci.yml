@@ -13,10 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scalaversion: [ "2.12.20", "2.13.16" ]
+        scalaversion: [ "2.12.21", "2.13.18" ]
         browser: [ "chrome" ]
         include:
-          - scalaversion: "2.12.20"
+          - scalaversion: "2.12.21"
             browser: "firefox"
     env:
       SJS_TEST_BROWSER: ${{ matrix.browser }}

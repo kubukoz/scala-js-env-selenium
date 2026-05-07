@@ -25,7 +25,12 @@ object TestDrivers {
     case "chrome" =>
       new ChromeDriver(
         new ChromeOptions()
-          .addArguments("--headless")
+          .addArguments(
+            "--headless=new",
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--allow-file-access-from-files"
+          )
       )
 
     case name =>

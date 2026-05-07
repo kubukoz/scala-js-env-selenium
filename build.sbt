@@ -11,7 +11,7 @@ val commonSettings: Seq[Setting[_]] = Seq(
   version := "2.0.0-SNAPSHOT",
   organization := "org.scala-js",
   scalaVersion := crossScalaVersions.value.head,
-  crossScalaVersions := Seq("2.12.20", "2.13.16"),
+  crossScalaVersions := Seq("2.12.21", "2.13.18"),
   scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings"),
 
   homepage := Some(url("http://scala-js.org/")),
@@ -60,10 +60,10 @@ lazy val seleniumJSEnv: Project = project.
          * It pulls in "closure-compiler-java-6" which in turn bundles some old
          * guava stuff which in turn makes selenium fail.
          */
-        "org.seleniumhq.selenium" % "selenium-java" % "4.35.0",
-        "org.scala-js" %% "scalajs-js-envs" % "1.4.0",
+        "org.seleniumhq.selenium" % "selenium-java" % "4.43.0",
+        "org.scala-js" %% "scalajs-js-envs" % "1.6.0",
         "com.google.jimfs" % "jimfs" % "1.3.1",
-        "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.4.0" % Test,
+        "org.scala-js" %% "scalajs-js-envs-test-kit" % "1.6.0" % Test,
         "com.novocode" % "junit-interface" % "0.11" % Test
     ),
 

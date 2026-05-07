@@ -130,6 +130,7 @@ private[selenium] object SeleniumRun {
       config: Config, runConfig: RunConfig, enableCom: Boolean)(
       newRun: Ctor[T], failed: Throwable => T): T = {
     validator.validate(runConfig)
+    validateInput(input)
 
     try {
       withCleanup(FileMaterializer(config.materialization))(_.close()) { m =>
@@ -163,6 +164,13 @@ private[selenium] object SeleniumRun {
 
   private def maybeCleanupDriver(d: WebDriver, config: SeleniumJSEnv.Config) =
     if (!config.keepAlive) d.quit()
+
+  private def validateInput(input: Seq[Input]): Unit = {
+    input.foreach {
+      case _: Input.Script | _: Input.ESModule | _: Input.CommonJSModule => // ok
+      case _ => throw new UnsupportedInputException(input)
+    }
+  }
 
   private def htmlPage(fullInput: Seq[Input], materializer: FileMaterializer): String = {
     val tags = fullInput.map {
